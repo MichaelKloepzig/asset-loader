@@ -1,0 +1,13 @@
+{
+	"name": "asset-loader",
+	"description": "Asynchronously loads and injects CSS, Javascript and font files into a website and uses localStorage for caching.",
+	"author": "Michael Klöpzig",
+	"license": "CC BY-SA 2.0",
+	"version": "0.1.0",
+	"repository": "",
+	"devDependencies": {
+		"gulp": "latest",
+		"gulp-uglify": "latest",
+		"gulp-rename": "latest"
+	}
+}
