@@ -2,6 +2,7 @@
 
 	var d = document,
 		w = window,
+		ls = localStorage,
 		p = (d.location.protocol == 'https:' ? 'https' : 'http') + '://',
 		h = d.getElementsByTagName('head')[0],
 		m = typeof alm === 'undefined' ? '' : alm,
@@ -22,11 +23,6 @@
 				'localStorage' in w &&
 				(('XMLHttpRequest' in w && 'withCredentials' in new XMLHttpRequest()) || 'XDomainRequest' in w)
 			),
-
-			domReady: function(callback)
-			{
-				d.readyState === 'interactive' || d.readyState === 'complete' ? callback() : d.addEventListener('DOMContentLoaded', callback);
-			},
 	
 			initLocal: function()
 			{
@@ -46,7 +42,7 @@
 				al[a].loading = true;
 				try
 				{
-					var c = localStorage.getItem(al[a].fullPath);
+					var c = ls.getItem(al[a].fullPath);
 					if(c)
 					{
 						al[a].loading = false;
@@ -114,7 +110,7 @@
 			
 			getAssetElement: function(asset, content, source)
 			{
-				var s;
+				var s, textNode;
 				switch(asset.type)
 				{
 					case 'text/javascript':
@@ -142,7 +138,7 @@
 						{
 							if(navigator.appName.indexOf('Internet Explorer') > -1)
 							{
-								document.createStyleSheet().cssText = content;
+								d.createStyleSheet().cssText = content;
 								return s;
 							}
 							else
@@ -177,9 +173,8 @@
 				
 				if(al[a].removeClassOnLoad != undefined)
 				{
-					_.domReady(function() {
-						document.body.classList.remove('fonts-loading');
-					});
+					var root = d.getElementsByTagName('html')[0];
+					root.classList.remove('fonts-loading');
 				}
 			},
 			
@@ -189,17 +184,17 @@
 	
 				try
 				{
-					Object.keys(localStorage).forEach(
+					Object.keys(ls).forEach(
 						function(key)
 						{
 							if(key.match(/^' + pattern + '/g))
 							{
-								localStorage.removeItem(key);
+								ls.removeItem(key);
 							}
 						}
 					);
 					
-					localStorage.setItem(asset.fullPath, content);
+					ls.setItem(asset.fullPath, content);
 				}
 				catch(e){}
 			}
