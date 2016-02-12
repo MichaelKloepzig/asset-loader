@@ -6,13 +6,14 @@
 		p = (d.location.protocol == 'https:' ? 'https' : 'http') + '://',
 		h = d.getElementsByTagName('head')[0],
 		m = typeof alm === 'undefined' ? '' : alm,
-		al = assets,
+		al,
 		_ = {
 			
 			init: function()
 			{
 				if(_.isModernBrowser)
 				{
+					al = assets;
 					_.initLocal();
 				}
 			},
@@ -23,6 +24,19 @@
 				'localStorage' in w &&
 				(('XMLHttpRequest' in w && 'withCredentials' in new XMLHttpRequest()) || 'XDomainRequest' in w)
 			),
+
+			canWoff2: function()
+			{
+				if(!("FontFace" in w))
+				{
+					return false;
+				}
+
+				var f = new w.FontFace("t", 'url("data:application/font-woff2,") format("woff2")', {});
+				f.load().catch(function() {});
+
+				return f.status == 'loading';
+			},
 	
 			initLocal: function()
 			{
@@ -30,6 +44,7 @@
 				{
 					if(al[a].loaded === true) continue;
 					if(m === 'dev') al[a].v = new Date().getTime();
+					if(al[a].hasOwnProperty('woff2') && _.canWoff2()) al[a].file = al[a].woff2;
 					al[a].fullPath = p + al[a].path + al[a].file + (al[a].v ? (al[a].file.indexOf('?') > -1 ? '&amp;' : '?') + 'v=' + al[a].v : '');
 					if(m !== 'dev') _.loadLocal(a);
 				}
@@ -203,4 +218,5 @@
 
 	_.init();
 	
-})();
+	return _;
+}());
