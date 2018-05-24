@@ -189,7 +189,7 @@
 				if(al[a].removeClassOnLoad != undefined)
 				{
 					var root = d.getElementsByTagName('html')[0];
-					root.classList.remove('fonts-loading');
+					root.classList.remove(al[a].removeClassOnLoad);
 				}
 			},
 			
